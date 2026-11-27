@@ -1,4 +1,4 @@
-هذا ملف **لوحة تحكم عربية جاهز**، وفيه معاينة مباشرة وحفظ للتعديلات في المتصفح. انسخ الكود كاملًا واحفظه باسم `admin.html` ثم افتحه. استبدل روابط الصور والفيديو بروابطك. **الحفظ محلي على الجهاز**؛ لجعل التغييرات تظهر لجميع الزوار تحتاج ربطه بخادم وقاعدة بيانات.
+تم—هذه نسخة صفحة الزوار بعد التعديل: **شاشة البث في أعلى الصفحة**، وحُذف المربع الأول، وتأتي الأزرار أسفل الشاشة. احفظها باسم `index.html` وعدّل الروابط في `CONFIG`.
 
 ```html
 <!doctype html>
@@ -6,257 +6,335 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>لوحة إدارة الموقع</title>
+  <title>البث المباشر</title>
+
   <style>
     :root {
-      --bg: #08090d;
-      --panel: #111319;
-      --panel2: #0b0c11;
-      --border: #30333d;
+      --bg: #07080b;
+      --panel: #101116;
+      --border: #30323b;
       --text: #f1f1f5;
-      --muted: #9799a4;
-      --accent: #eab34d;
-      --secondary: #282b35;
-      --font: Tahoma, Arial, sans-serif;
-      --size: 16px;
-      --heading: 25px;
-      --radius: 18px;
+      --muted: #92949e;
+      --gold: #f2bb55;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100vh;
+      padding: 24px 16px;
       color: var(--text);
-      font-family: var(--font);
-      font-size: var(--size);
+      background:
+        radial-gradient(ellipse at 50% -20%, #282116, transparent 45%),
+        var(--bg);
+      font-family: Tahoma, Arial, sans-serif;
     }
-    button, input, textarea, select { font: inherit; }
-    button { cursor: pointer; }
-    .layout { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; }
-    aside {
-      padding: 22px 14px;
-      background: #0c0d12;
-      border-left: 1px solid var(--border);
-    }
-    .brand { font-size: 20px; font-weight: 700; padding: 10px 12px 24px; }
-    .nav { display: grid; gap: 8px; }
-    .nav button {
-      text-align: right;
-      padding: 13px 14px;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--muted);
-    }
-    .nav button:hover, .nav button.active {
-      color: var(--text);
-      background: #1a1b22;
-      border-color: var(--border);
-    }
-    main { min-width: 0; padding: 26px; }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-    h1 { margin: 0; font-size: var(--heading); }
-    h2 { margin: 0 0 16px; font-size: 20px; }
-    h3 { margin: 0 0 10px; font-size: 17px; }
-    p { color: var(--muted); line-height: 1.7; }
-    .panel, .preview {
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: linear-gradient(145deg, var(--panel), var(--panel2));
-      margin-bottom: 18px;
-    }
-    .section { display: none; }
-    .section.active { display: block; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .field { display: grid; gap: 7px; }
-    .field.full { grid-column: 1 / -1; }
-    label { color: var(--muted); font-size: 14px; }
-    input, textarea, select {
-      width: 100%;
-      padding: 11px 12px;
-      color: var(--text);
-      background: #090a0e;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      outline: none;
-    }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-    textarea { min-height: 88px; resize: vertical; }
-    input[type="color"] { height: 44px; padding: 4px; }
-    .row { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
-    .btn {
-      padding: 10px 15px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      background: #191b22;
-    }
-    .btn:hover { border-color: var(--accent); }
-    .btn.primary { color: #171006; background: var(--accent); border-color: var(--accent); font-weight: 700; }
-    .btn.danger { color: #ffc2c2; }
-    .items { display: grid; gap: 10px; margin-top: 18px; }
-    .item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #0b0c11;
-    }
-    .item small { display: block; color: var(--muted); margin-top: 5px; overflow-wrap: anywhere; }
-    .item-actions { display: flex; gap: 7px; flex-shrink: 0; }
-    .item-actions button { padding: 7px 10px; }
-    .check-list { display: flex; flex-wrap: wrap; gap: 10px; }
-    .check-list label {
-      display: flex; align-items: center; gap: 7px;
-      padding: 8px 10px; border: 1px solid var(--border); border-radius: 9px;
-    }
-    .check-list input { width: auto; }
-    .preview { border-color: color-mix(in srgb, var(--accent), var(--border) 55%); }
-    .preview-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-    .preview-buttons a {
-      padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); text-decoration: none; background: var(--secondary);
-    }
-    .preview-buttons a:hover { border-color: var(--accent); }
-    .preview-media { display: grid; grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 10px; }
-    .preview-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #090a0e; }
-    .preview-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
-    .preview-card div { padding: 9px; }
-    .preview-card small { color: var(--muted); }
-    .banner-img { max-width: 100%; max-height: 180px; border-radius: 12px; margin-top: 10px; }
-    .notice { font-size: 13px; color: var(--muted); }
-    .empty { color: var(--muted); padding: 12px 0; }
 
-    @media (max-width: 800px) {
-      .layout { grid-template-columns: 1fr; }
-      aside { border-left: 0; border-bottom: 1px solid var(--border); padding: 10px; }
-      .brand { padding: 8px; }
-      .nav { display: flex; overflow-x: auto; }
-      .nav button { white-space: nowrap; }
-      main { padding: 16px; }
+    .page { width: min(100%, 1100px); margin: 0 auto; }
+
+    /* شاشة البث هي أول عنصر ظاهر في الصفحة */
+    .screen {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: #050609;
+      box-shadow: 0 18px 55px #0006;
     }
-    @media (max-width: 540px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .field.full { grid-column: auto; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .item { align-items: flex-start; flex-direction: column; }
+
+    .screen-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 20px;
+      background: linear-gradient(145deg, #111218, #090a0e);
+      border-bottom: 1px solid #282a31;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 4vw, 27px);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #777983;
+    }
+
+    .status.live { color: #c8f6df; }
+    .status.live .status-dot {
+      background: #5ed49a;
+      box-shadow: 0 0 12px #5ed49a99;
+    }
+
+    .video-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 16 / 9;
+      background:
+        radial-gradient(ellipse at center, #17130d, transparent 58%),
+        #050609;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .placeholder {
+      padding: 24px;
+      color: var(--muted);
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .placeholder svg {
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 12px;
+      color: var(--gold);
+    }
+
+    .message {
+      min-height: 48px;
+      padding: 12px 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .action {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 12px;
+      border: 1px solid #353740;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #111218, #090a0e);
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      font: inherit;
+      transition: .18s ease;
+    }
+
+    .action svg {
+      width: 21px;
+      height: 21px;
+      flex: 0 0 auto;
+      color: var(--gold);
+    }
+
+    .action:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+      background: #17140f;
+      box-shadow: 0 8px 24px #d99b3022;
+    }
+
+    .action:active:not(:disabled) { transform: scale(.98); }
+
+    .action:focus-visible {
+      outline: 2px solid #ffdc8a;
+      outline-offset: 3px;
+    }
+
+    .action:disabled { opacity: .5; cursor: not-allowed; }
+
+    .action.primary {
+      border-color: #e8b650;
+      background: linear-gradient(180deg, #ffdc8a, #d49328);
+      color: #171006;
+      font-weight: 700;
+    }
+
+    .action.primary svg { color: #171006; }
+
+    .action.primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #ffe6aa, #e3a83f);
+    }
+
+    @media (max-width: 780px) {
+      .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .action:last-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 440px) {
+      body { padding: 12px; }
+      .screen-heading { align-items: flex-start; flex-direction: column; }
+      .actions { grid-template-columns: 1fr; }
+      .action:last-child { grid-column: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
     }
   </style>
 </head>
+
 <body>
-<div class="layout">
-  <aside>
-    <div class="brand">لوحة إدارة الموقع</div>
-    <nav class="nav" aria-label="أقسام لوحة التحكم">
-      <button class="active" data-section="previewSection">المعاينة</button>
-      <button data-section="buttonsSection">الأزرار</button>
-      <button data-section="fallbackSection">شاشة العرض</button>
-      <button data-section="bannersSection">البنرات</button>
-      <button data-section="moviesSection">الأفلام</button>
-      <button data-section="groupsSection">المجموعات</button>
-      <button data-section="themeSection">الهوية البصرية</button>
+  <main class="page">
+
+    <!-- شاشة العرض في أعلى الصفحة، دون المربع السابق -->
+    <section class="screen" aria-label="شاشة البث المباشر">
+      <header class="screen-heading">
+        <h1>البث المباشر</h1>
+        <div class="status" id="streamStatus" role="status" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="statusText">البث غير مفتوح</span>
+        </div>
+      </header>
+
+      <div class="video-wrap" id="videoWrap">
+        <div class="placeholder" id="placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.5" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+            <path d="m10 9 5 3-5 3V9Z"></path>
+          </svg>
+          سيظهر البث هنا عند تشغيله.
+        </div>
+      </div>
+
+      <div class="message" id="message" aria-live="polite">
+        اضغط «عرض البث المباشر» لمشاهدة البث.
+      </div>
+    </section>
+
+    <!-- أزرار الزوار أسفل شاشة البث -->
+    <nav class="actions" aria-label="خيارات المستخدم">
+      <a class="action" id="websiteButton" href="#" target="_blank"
+         rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"></path>
+        </svg>
+        رابط موقعي
+      </a>
+
+      <button class="action" id="refreshButton" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M20 7v5h-5M4 17v-5h5"></path>
+          <path d="M5.6 9A7 7 0 0 1 18 6l2 6M4 12l2 6a7 7 0 0 0 12.4-3"></path>
+        </svg>
+        تحديث البث
+      </button>
+
+      <a class="action" id="contactButton" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8v.5Z"></path>
+        </svg>
+        راسلني
+      </a>
+
+      <a class="action" id="aiButton" href="#" target="_blank"
+         rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"></circle>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7m10 10 2.1 2.1m0-14.2L17 7M7 17l-2.1 2.1"></path>
+        </svg>
+        شات الذكاء الاصطناعي
+      </a>
+
+      <button class="action primary" id="watchButton" type="button">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7 4.8c0-1.2 1.3-1.9 2.3-1.3l11 6.7a2.1 2.1 0 0 1 0 3.6l-11 6.7A1.5 1.5 0 0 1 7 19.2V4.8Z"></path>
+        </svg>
+        عرض البث المباشر
+      </button>
     </nav>
-  </aside>
+  </main>
 
-  <main>
-    <header class="topbar">
-      <h1 id="pageTitle">معاينة واجهة المستخدم</h1>
-      <button class="btn primary" id="saveAll">حفظ التغييرات</button>
-    </header>
+  <script>
+    // استبدل هذه القيم بروابطك الفعلية.
+    const CONFIG = {
+      websiteURL: "https://example.com",
+      contactURL: "mailto:you@example.com",
+      aiChatURL: "https://example.com/ai-chat",
 
-    <section class="section active" id="previewSection">
-      <div class="preview">
-        <h2 id="previewTitle">واجهة العرض</h2>
-        <div id="previewFallback"></div>
-        <div class="preview-buttons" id="previewButtons"></div>
-        <h3>البنرات</h3>
-        <div class="preview-media" id="previewBanners"></div>
-        <h3 style="margin-top:18px">الأفلام</h3>
-        <div class="preview-media" id="previewMovies"></div>
-      </div>
-      <p class="notice">المعاينة تتحدث مباشرة بعد إضافة أو تعديل العناصر.</p>
-    </section>
+      // مثال يوتيوب: https://www.youtube.com/embed/VIDEO_ID
+      // مثال تويتش: https://player.twitch.tv/?channel=CHANNEL_NAME&parent=YOUR_DOMAIN
+      streamEmbedURL: ""
+    };
 
-    <section class="section" id="buttonsSection">
-      <div class="panel">
-        <h2>إضافة زر أو تعديله</h2>
-        <form id="buttonForm" class="form-grid">
-          <input type="hidden" id="buttonId">
-          <div class="field">
-            <label for="buttonLabel">اسم الزر</label>
-            <input id="buttonLabel" required placeholder="مثال: رابط موقعي">
-          </div>
-          <div class="field">
-            <label for="buttonUrl">الرابط أو الوجهة</label>
-            <input id="buttonUrl" required placeholder="https://example.com">
-          </div>
-          <div class="field full row">
-            <button class="btn primary" type="submit">حفظ الزر</button>
-            <button class="btn" type="button" id="cancelButtonEdit">إلغاء التعديل</button>
-          </div>
-        </form>
-        <div class="items" id="buttonList"></div>
-      </div>
-    </section>
+    const videoWrap = document.getElementById("videoWrap");
+    const status = document.getElementById("streamStatus");
+    const statusText = document.getElementById("statusText");
+    const message = document.getElementById("message");
 
-    <section class="section" id="fallbackSection">
-      <div class="panel">
-        <h2>المحتوى عند عدم وجود بث مباشر</h2>
-        <form id="fallbackForm" class="form-grid">
-          <div class="field">
-            <label for="fallbackType">نوع العرض البديل</label>
-            <select id="fallbackType">
-              <option value="message">رسالة ترحيبية</option>
-              <option value="image">صورة</option>
-              <option value="video">فيديو مسجل</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="fallbackUrl">رابط الصورة أو الفيديو (اختياري)</label>
-            <input id="fallbackUrl" placeholder="https://example.com/media">
-          </div>
-          <div class="field full">
-            <label for="fallbackText">الرسالة أو الوصف</label>
-            <textarea id="fallbackText" placeholder="أهلًا بكم، سيبدأ البث قريبًا"></textarea>
-          </div>
-          <div class="field full">
-            <button class="btn primary" type="submit">حفظ وتطبيق</button>
-          </div>
-        </form>
-      </div>
-    </section>
+    document.getElementById("websiteButton").href = CONFIG.websiteURL;
+    document.getElementById("contactButton").href = CONFIG.contactURL;
+    document.getElementById("aiButton").href = CONFIG.aiChatURL;
 
-    <section class="section" id="bannersSection">
-      <div class="panel">
-        <h2>إدارة البنرات والصور</h2>
-        <form id="bannerForm" class="form-grid">
-          <input type="hidden" id="bannerId">
-          <div class="field">
-            <label for="bannerTitle">عنوان البنر</label>
-            <input id="bannerTitle" required>
-          </div>
-          <div class="field">
-            <label for="bannerImage">رابط الصورة</label>
-            <input id="bannerImage" required placeholder="https://example.com/banner.jpg">
-          </div>
-          <div class="field full">
-            <label for="bannerLink">رابط عند الضغط (اختياري)</label>
-            <input id="bannerLink" placeholder="https://example.com">
-          </div>
-          <div class="field full row">
-            <button class="btn primary" type="submit">حفظ البنر</button>
-            <button class="btn" type="button" id="cancelBannerEdit">إلغاء التعديل</button>
-          </div>
-        </form>
-        <div class="items" id="bannerList
+    function showStream() {
+      if (!CONFIG.streamEmbedURL.trim()) {
+        message.textContent = "أضف رابط تضمين البث في CONFIG ليظهر هنا.";
+        return;
+      }
+
+      const oldFrame = videoWrap.querySelector("iframe");
+      if (oldFrame) oldFrame.remove();
+
+      const placeholder = document.getElementById("placeholder");
+      if (placeholder) placeholder.remove();
+
+      const frame = document.createElement("iframe");
+      frame.src = CONFIG.streamEmbedURL;
+      frame.title = "البث المباشر";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture";
+      frame.allowFullscreen = true;
+      videoWrap.appendChild(frame);
+
+      status.classList.add("live");
+      statusText.textContent = "مشغل البث مفتوح";
+      message.textContent = "يتم تحميل البث…";
+    }
+
+    document.getElementById("watchButton").addEventListener("click", showStream);
+
+    document.getElementById("refreshButton").addEventListener("click", () => {
+      const frame = videoWrap.querySelector("iframe");
+
+      if (frame) {
+        frame.src = frame.src;
+        message.textContent = "تم تحديث مشغل البث.";
+      } else {
+        showStream();
+      }
+    });
+  </script>
+</body>
+</html>
+```
